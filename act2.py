@@ -1,3 +1,7 @@
+#CMSC162: Activity 3 - Image Enhancement Basics
+#Author: Greg Norman C. Millora (2019-60019)
+#Date: 10/10/2019
+
 from PyQt5.QtWidgets import QMainWindow, QApplication, QAction,QLabel,QFileDialog,QTabWidget,QStackedWidget
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QImage
@@ -37,7 +41,6 @@ class PCX():
 class UI(QMainWindow, PCX):
   def __init__(self):
     #Load the UI from QtDesigner
-    
     super(UI, self).__init__()
     uic.loadUi('viewer.ui', self)
     self.show()
@@ -62,14 +65,20 @@ class UI(QMainWindow, PCX):
     self.getGreenChannel.triggered.connect(self.split_green)
    
     self.fileopen=''
+    
+  #Function to show the information tab on the UI
   def show_channel(self):
     self.infoTab.setHidden(False)
-    
+  
+  #Function to convert an image to PNG and save it to the current directory as 'dump.png'
   def convert_to_png(self,path):
     img = Image.open(self.fileopen)
     img.save('dump.png')
   
+  #Function to create a histogram using matplotlib and show to the UI by
+  #converting the plot to a .PNG file and setting it to the label.
   def create_histogram(self,histo_values,name):
+    pyplot.clf()
     color_y = histo_values
     x = np.arange(0,256)
     print(x)
@@ -77,8 +86,6 @@ class UI(QMainWindow, PCX):
     figure = pyplot.Figure(figsize = (5,5),dpi=80)
     
     pyplot.plot(x, color_y, color=name)
-
-    pyplot.show()
     pyplot.savefig('histo_plot.png')
     plot = Image.open('histo_plot.png')
     plot = plot.resize((500,500))
@@ -88,8 +95,9 @@ class UI(QMainWindow, PCX):
 
     
     
-  #Function to open a file dialogue and set the selected image to
-  #the label using Pixmap
+  #Functions to split the channels of the image and show it to the UI.
+  #Also creates a histogram of the channel and shows it to the UI.
+  #The histogram is created by using the PIL.Image.histogram() function.
   def split_red(self):
     img = Image.open('dump.png')
     img = img.resize((300,300))
@@ -125,6 +133,9 @@ class UI(QMainWindow, PCX):
     print(blue_histogram)
     self.show_image(blue_channel)
     
+  #Function to show the image to the UI
+  #Converts the image to a .PNG file and sets it to the label
+  #with the size 400x400.
   def show_image(self,img):
     img = img.resize((400,400))
     temp_img = ImageQt(img)
@@ -132,20 +143,24 @@ class UI(QMainWindow, PCX):
     self.label.setPixmap(self.pixmap)
     
   def add_image(self,s):
-    
+    #If a file was open, clear the plot label and set the text to select channel.
     if(self.fileopen):
       self.plotLabel.clear()
       self.plotLabel.setText("Please select channel to show")
-    self.show_channel()
+    self.show_channel() #Show the information tab
     self.fileopen,_ = QFileDialog.getOpenFileName(self, 'Open file', '/home',"Image files (*.jpg *.gif *.png *.bmp  *.pcx)")
+    
+    #Convert the image file to PNG.
     self.convert_to_png(self.fileopen)
     
-    
+    #Open the PCX image file and read the header.
     if(self.fileopen.endswith('.pcx')):
       self.open_pcx(self.fileopen)
       self.information.setText(f"Manufacturer: {self.manufacturer} \nVersion: {self.ver} \nEncoding: {self.encd} \nBits per pixel: {self.bits} \nImage Dimensions: {self.xmin} {self.ymin} {self.xmax} {self.ymax} \nHDPI: {self.hdpi} \nVDPI: {self.vdpi} \nNumber of Color Planes: {self.planes} \nBits per Line: {self.bytes} \nPalette Information: {self.palette} \nHorizontal Screen Size: {self.hor_ss} \nVertical Screen Size: {self.vert_ss}")
     else:
       self.information.setText("No Information")
+      
+    #Open the image file and show it to the UI.
     self.image = Image.open(self.fileopen)
     self.show_image(self.image)
     print(self.fileopen)
