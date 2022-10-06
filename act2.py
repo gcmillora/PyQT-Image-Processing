@@ -98,16 +98,16 @@ class UI(QMainWindow, PCX):
   #Functions to split the channels of the image and show it to the UI.
   #Also creates a histogram of the channel and shows it to the UI.
   #The histogram is created by using the PIL.Image.histogram() function.
+  #Image.merge() is used to merge the channels to create a new image.
   def split_red(self):
     img = Image.open('dump.png')
     img = img.resize((300,300))
     img = img.convert('RGB')
     red, green, blue = img.split()
-    red_channel = Image.merge('RGB', (red, red.point(lambda _:0),red.point(lambda _:0)))
-    red_histogram = red.histogram()
-    self.create_histogram(red_histogram,'RED')
-    print(red_histogram)
-    self.show_image(red_channel)
+    channel = Image.merge('RGB', (red, red.point(lambda _:0),red.point(lambda _:0)))
+    histogram = red.histogram()
+    self.create_histogram(histogram,'RED')
+    self.show_image(channel)
     
   def split_green(self):
     img = Image.open('dump.png')
@@ -115,11 +115,10 @@ class UI(QMainWindow, PCX):
     img = img.convert('RGB')
     
     red, green, blue = img.split()
-    green_channel = Image.merge('RGB', (green.point(lambda _:0), green, green.point(lambda _:0)))
-    green_histogram = green.histogram()
-    self.create_histogram(green_histogram,'GREEN')
-    print(green_histogram)
-    self.show_image(green_channel)
+    channel = Image.merge('RGB', (green.point(lambda _:0), green, green.point(lambda _:0)))
+    histogram = green.histogram()
+    self.create_histogram(histogram,'GREEN')
+    self.show_image(channel)
     
   def split_blue(self):
     img = Image.open('dump.png')
@@ -127,11 +126,10 @@ class UI(QMainWindow, PCX):
     img = img.convert('RGB')
     
     red,green,blue = img.split()
-    blue_channel = Image.merge('RGB', (blue.point(lambda _:0), blue.point(lambda _:0), blue))
-    blue_histogram = blue.histogram()
-    self.create_histogram(blue_histogram,'BLUE')
-    print(blue_histogram)
-    self.show_image(blue_channel)
+    channel = Image.merge('RGB', (blue.point(lambda _:0), blue.point(lambda _:0), blue))
+    histogram = blue.histogram()
+    self.create_histogram(histogram,'BLUE')
+    self.show_image(channel)
     
   #Function to show the image to the UI
   #Converts the image to a .PNG file and sets it to the label
