@@ -103,9 +103,10 @@ class UI(QMainWindow, PCX):
     img = Image.open('dump.png')
     img = img.resize((300,300))
     img = img.convert('RGB')
+    
     red, green, blue = img.split()
-    channel = Image.merge('RGB', (red, red.point(lambda _:0),red.point(lambda _:0)))
     histogram = red.histogram()
+    channel = Image.merge('RGB', (red, red.point(lambda _:0),red.point(lambda _:0)))
     self.create_histogram(histogram,'RED')
     self.show_image(channel)
     
@@ -115,8 +116,8 @@ class UI(QMainWindow, PCX):
     img = img.convert('RGB')
     
     red, green, blue = img.split()
-    channel = Image.merge('RGB', (green.point(lambda _:0), green, green.point(lambda _:0)))
     histogram = green.histogram()
+    channel = Image.merge('RGB', (green.point(lambda _:0), green, green.point(lambda _:0)))
     self.create_histogram(histogram,'GREEN')
     self.show_image(channel)
     
@@ -126,8 +127,8 @@ class UI(QMainWindow, PCX):
     img = img.convert('RGB')
     
     red,green,blue = img.split()
-    channel = Image.merge('RGB', (blue.point(lambda _:0), blue.point(lambda _:0), blue))
     histogram = blue.histogram()
+    channel = Image.merge('RGB', (blue.point(lambda _:0), blue.point(lambda _:0), blue))
     self.create_histogram(histogram,'BLUE')
     self.show_image(channel)
     
