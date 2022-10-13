@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>806</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -115,6 +115,162 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QDockWidget" name="bnwDock">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>350</y>
+      <width>261</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="floating">
+     <bool>true</bool>
+    </property>
+    <property name="allowedAreas">
+     <set>Qt::RightDockWidgetArea</set>
+    </property>
+    <property name="windowTitle">
+     <string>Black and White Threshold</string>
+    </property>
+    <widget class="QWidget" name="dockWidgetContents_4">
+     <widget class="QSlider" name="bnwSlider">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>160</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>255</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>127</number>
+      </property>
+      <property name="sliderPosition">
+       <number>127</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="bnwVal">
+      <property name="geometry">
+       <rect>
+        <x>-10</x>
+        <y>70</y>
+        <width>161</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Value = 127</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveImage">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>60</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QDockWidget" name="gammaDock">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>350</y>
+      <width>261</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="floating">
+     <bool>true</bool>
+    </property>
+    <property name="allowedAreas">
+     <set>Qt::RightDockWidgetArea</set>
+    </property>
+    <property name="windowTitle">
+     <string>Gamma Threshold</string>
+    </property>
+    <widget class="QWidget" name="dockWidgetContents_2">
+     <widget class="QSlider" name="gammaSlider">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>160</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>10</number>
+      </property>
+      <property name="sliderPosition">
+       <number>10</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="gammaVal">
+      <property name="geometry">
+       <rect>
+        <x>-20</x>
+        <y>70</y>
+        <width>161</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gamma = 1</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveImage_2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>60</y>
+        <width>113</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -127,14 +283,16 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAdd_Image"/>
+   <addaction name="grayscaleTool"/>
+   <addaction name="reset"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>24</height>
+     <width>806</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuChannel">
@@ -149,9 +307,20 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="reset"/>
+   </widget>
+   <widget class="QMenu" name="menuTransform">
+    <property name="title">
+     <string>Transform</string>
+    </property>
+    <addaction name="tfGrayscale"/>
+    <addaction name="tfNegative"/>
+    <addaction name="thGamma"/>
+    <addaction name="bnwButton"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuChannel"/>
+   <addaction name="menuTransform"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -197,6 +366,44 @@
   <action name="showChannels">
    <property name="text">
     <string>Show Channels</string>
+   </property>
+  </action>
+  <action name="tfGrayscale">
+   <property name="text">
+    <string>Grayscale</string>
+   </property>
+  </action>
+  <action name="tfNegative">
+   <property name="text">
+    <string>Negative</string>
+   </property>
+  </action>
+  <action name="thGamma">
+   <property name="text">
+    <string>Gamma</string>
+   </property>
+  </action>
+  <action name="bnwButton">
+   <property name="text">
+    <string>Black and White</string>
+   </property>
+  </action>
+  <action name="reset">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Downloads/undo-arrow.png</normaloff>../../../../../Downloads/undo-arrow.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
+  <action name="grayscaleTool">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../../Downloads/greyscale.png</normaloff>../../../../../Downloads/greyscale.png</iconset>
+   </property>
+   <property name="text">
+    <string>GRAYSCALE</string>
    </property>
   </action>
  </widget>

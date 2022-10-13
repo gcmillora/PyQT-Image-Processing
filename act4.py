@@ -1,14 +1,16 @@
-#CMSC162: Activity 3 - Image Enhancement Basics
+#CMSC162: Activity 4 - Image Enhancement Basics
 #Author: Greg Norman C. Millora (2019-60019)
-#Date: 10/10/2019
+#Date: 10/13/2022
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QAction,QLabel,QFileDialog,QTabWidget,QStackedWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QAction,QLabel,QFileDialog,QTabWidget,QStackedWidget, QDockWidget,QSlider,QPushButton
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QImage
 from PIL.ImageQt import ImageQt
 from PIL import Image
+from cv2 import QT_PUSH_BUTTON
 import matplotlib.pyplot as pyplot
 import numpy as np
+import cv2
 import struct
 import sys
 
@@ -55,21 +57,74 @@ class UI(QMainWindow, PCX):
     self.getRedChannel = self.findChild(QAction,'getRed')
     self.getBlueChannel = self.findChild(QAction,'getBlue')
     self.getGreenChannel = self.findChild(QAction,'getGreen')
+    self.grayscale = self.findChild(QAction,'tfGrayscale')
+    self.negative = self.findChild(QAction, 'tfNegative')
     self.infoTab = self.findChild(QTabWidget,'infoTab')
+    
+    #Gamma Dock Widgets
+    self.gammaDock = self.findChild(QDockWidget,'gammaDock')
+    self.gammaThresh = self.findChild(QAction,'thGamma')
+    self.gammaSlider = self.findChild(QSlider,'gammaSlider')
+    self.gammaVal = self.findChild(QLabel,'gammaVal')
+    self.gammaDock.setHidden(True)
+    
+    #Black and White Dock Widgets
+    self.bnwDock = self.findChild(QDockWidget,'bnwDock')
+    self.bnwThresh = self.findChild(QAction,'bnwButton')
+    self.bnwSlider = self.findChild(QSlider,'bnwSlider')
+    self.bnwVal = self.findChild(QLabel,'bnwVal')
+    
+    #Utility Widgets
+    self.saveImgBNW = self.findChild(QPushButton,'saveImage')
+    self.saveImgGamma = self.findChild(QPushButton,'saveImage_2')
+    self.reset = self.findChild(QAction,'reset')
+    self.grayscaleTool = self.findChild(QAction,'grayscaleTool')
+    
+    #Initial states of the UI
+    self.bnwDock.setHidden(True)
+    self.bnwThresh.setEnabled(False)
     self.infoTab.setHidden(True)
 
-    #When self.button is clicked, trigger the function 'add_image()'
+    #Connect the buttons to their respective functions
     self.button.triggered.connect(self.add_image)
     self.getRedChannel.triggered.connect(self.split_red)
     self.getBlueChannel.triggered.connect(self.split_blue)
     self.getGreenChannel.triggered.connect(self.split_green)
-   
+    self.grayscale.triggered.connect(self.tf_grayscale)
+    self.negative.triggered.connect(self.tf_negative)
+    self.gammaThresh.triggered.connect(self.show_gamma)
+    self.gammaSlider.valueChanged.connect(self.tf_gamma)
+    self.bnwThresh.triggered.connect(self.show_bnw)
+    self.bnwSlider.valueChanged.connect(self.tf_bnw)
+    self.saveImgBNW.clicked.connect(self.save_image)
+    self.saveImgGamma.clicked.connect(self.save_image)
+    self.reset.triggered.connect(self.reset_image)
+    self.grayscaleTool.triggered.connect(self.tf_grayscale)
+    
+    #Declare the variables
     self.fileopen=''
+    self.image = None
+    self.orig_img = None
+  
+  
+  def reset_image(self):
+    self.image = self.orig_img
+    self.label.setPixmap(QPixmap.fromImage(ImageQt(self.image)))
+    self.gammaDock.setHidden(True)
+    self.bnwDock.setHidden(True)
+    self.bnwThresh.setEnabled(False)
     
   #Function to show the information tab on the UI
   def show_channel(self):
     self.infoTab.setHidden(False)
+  def show_gamma(self):
+    self.gammaDock.setHidden(False)
+  def show_bnw(self):
+    self.bnwDock.setHidden(False)
   
+  def save_image(self):
+    self.image.save('dump.png')
+
   #Function to convert an image to PNG and save it to the current directory as 'dump.png'
   def convert_to_png(self,path):
     img = Image.open(self.fileopen)
@@ -93,8 +148,6 @@ class UI(QMainWindow, PCX):
     pixmap = QPixmap.fromImage(temp_img)
     self.plotLabel.setPixmap(pixmap)
 
-    
-    
   #Functions to split the channels of the image and show it to the UI.
   #Also creates a histogram of the channel and shows it to the UI.
   #The histogram is created by using the PIL.Image.histogram() function.
@@ -131,6 +184,78 @@ class UI(QMainWindow, PCX):
     channel = Image.merge('RGB', (blue.point(lambda _:0), blue.point(lambda _:0), blue))
     self.create_histogram(histogram,'BLUE')
     self.show_image(channel)
+  
+  #Function to transform the image to grayscale using
+  #OpenCV. Gets the sum of the RGB pixel values and gets
+  #its average and assign it to that pixel. Then convert
+  #the image back to PIL Image format from the OpenCV
+  #array object.
+  
+  def tf_grayscale(self):
+    img = cv2.imread('dump.png')
+    (row,col) = img.shape[:2]
+    for i in range(row):
+      for j in range(col):
+        img[i, j] = sum(img[i, j]) / 3
+    img = Image.fromarray(img)
+    img.save('dump.png')
+    self.show_image(img)
+    self.gammaThresh.setEnabled(True)
+    self.bnwThresh.setEnabled(True)
+  
+  #Function to transform the image to negative using
+  #OpenCV. Gets the sum of the RGB pixel values and subtracts
+  #it from 255 and assign it to that pixel. Then convert
+  #the image back to PIL Image format from the OpenCV
+  #array object.
+  def tf_negative(self):
+    img = cv2.imread('dump.png')
+    (row,col) = img.shape[:2]
+    for i in range(row):
+      for j in range(col):
+        # Find the average of the BGR pixel values
+        img[i, j] = 255 - img[i, j]
+    img = Image.fromarray(img)
+    img.save('dump.png')
+    self.show_image(img)
+    self.gammaThresh.setEnabled(False)
+    self.bnwThresh.setEnabled(False)
+  
+  #Function to transform the image to gamma using
+  #OpenCV. Gets the sum of the RGB pixel values and
+  #raise it to the power of the gamma value and assign
+  #it to that pixel. Then convert the image back to PIL
+  #Image format from the OpenCV array object.
+  def tf_gamma(self, gamma=1.0):
+    gamma = gamma/10
+    self.gammaVal.setText("Gamma = "+str(gamma))
+    image = cv2.imread('dump.png')
+    table = np.array([((pixel / 255.0) ** gamma) * 255
+      for pixel in np.arange(0, 256)]).astype("uint8")
+    img = Image.fromarray(cv2.LUT(image, table))
+    self.image = img
+    self.show_image(img)
+  
+  #Function to transform the image to black and white using
+  #OpenCV. Gets the sum of the RGB pixel values and
+  #if the sum is greater than the threshold value, it
+  #assigns 255 to that pixel. Else, it assigns 0 to that
+  #pixel. Then convert the image back to PIL Image format
+  #from the OpenCV array object.
+  def tf_bnw(self, k=127.0):
+    self.tf_grayscale()
+    self.bnwVal.setText("Value = "+str(k))
+    img = cv2.imread('dump.png')
+    (row,col) = img.shape[:2]
+    for i in range(row):
+      for j in range(col):
+        if sum(img[i,j])/3 < k:
+          img[i,j] = 0
+        else:
+          img[i,j] = 255
+    img = Image.fromarray(img)
+    self.image = img
+    self.show_image(img)
     
   #Function to show the image to the UI
   #Converts the image to a .PNG file and sets it to the label
@@ -160,11 +285,11 @@ class UI(QMainWindow, PCX):
       self.information.setText("No Information")
       
     #Open the image file and show it to the UI.
-    self.image = Image.open(self.fileopen)
-    self.show_image(self.image)
+    img = Image.open(self.fileopen)
+    self.orig_img = img
+    self.show_image(img)
     print(self.fileopen)
     
- 
 
 app = QApplication(sys.argv)
 UIWindow = UI()
