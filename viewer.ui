@@ -118,7 +118,7 @@
    <widget class="QDockWidget" name="bnwDock">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>180</x>
       <y>350</y>
       <width>261</width>
       <height>141</height>
@@ -222,10 +222,10 @@
        </rect>
       </property>
       <property name="minimum">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="maximum">
-       <number>100</number>
+       <number>1000</number>
       </property>
       <property name="singleStep">
        <number>1</number>
@@ -284,6 +284,7 @@
    </attribute>
    <addaction name="actionAdd_Image"/>
    <addaction name="grayscaleTool"/>
+   <addaction name="tfNegative"/>
    <addaction name="reset"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -330,7 +331,7 @@
   <action name="actionAdd_Image">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Downloads/plus.png</normaloff>../../../../../Downloads/plus.png</iconset>
+     <normaloff>icons/plus.png</normaloff>icons/plus.png</iconset>
    </property>
    <property name="text">
     <string>Add Image</string>
@@ -374,6 +375,10 @@
    </property>
   </action>
   <action name="tfNegative">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/minus.png</normaloff>icons/minus.png</iconset>
+   </property>
    <property name="text">
     <string>Negative</string>
    </property>
@@ -391,7 +396,7 @@
   <action name="reset">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Downloads/undo-arrow.png</normaloff>../../../../../Downloads/undo-arrow.png</iconset>
+     <normaloff>icons/undo-arrow.png</normaloff>icons/undo-arrow.png</iconset>
    </property>
    <property name="text">
     <string>Reset</string>
@@ -400,7 +405,7 @@
   <action name="grayscaleTool">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Downloads/greyscale.png</normaloff>../../../../../Downloads/greyscale.png</iconset>
+     <normaloff>icons/black-and-white.png</normaloff>icons/black-and-white.png</iconset>
    </property>
    <property name="text">
     <string>GRAYSCALE</string>

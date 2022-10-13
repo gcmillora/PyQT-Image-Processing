@@ -108,7 +108,10 @@ class UI(QMainWindow, PCX):
   
   
   def reset_image(self):
+    self.bnwSlider.setValue(127)
+    self.gammaSlider.setValue(1)
     self.image = self.orig_img
+    self.image.save('dump.png')
     self.label.setPixmap(QPixmap.fromImage(ImageQt(self.image)))
     self.gammaDock.setHidden(True)
     self.bnwDock.setHidden(True)
@@ -200,7 +203,6 @@ class UI(QMainWindow, PCX):
     img = Image.fromarray(img)
     img.save('dump.png')
     self.show_image(img)
-    self.gammaThresh.setEnabled(True)
     self.bnwThresh.setEnabled(True)
   
   #Function to transform the image to negative using
@@ -213,12 +215,10 @@ class UI(QMainWindow, PCX):
     (row,col) = img.shape[:2]
     for i in range(row):
       for j in range(col):
-        # Find the average of the BGR pixel values
         img[i, j] = 255 - img[i, j]
     img = Image.fromarray(img)
     img.save('dump.png')
     self.show_image(img)
-    self.gammaThresh.setEnabled(False)
     self.bnwThresh.setEnabled(False)
   
   #Function to transform the image to gamma using
@@ -230,9 +230,9 @@ class UI(QMainWindow, PCX):
     gamma = gamma/10
     self.gammaVal.setText("Gamma = "+str(gamma))
     image = cv2.imread('dump.png')
-    table = np.array([((pixel / 255.0) ** gamma) * 255
-      for pixel in np.arange(0, 256)]).astype("uint8")
-    img = Image.fromarray(cv2.LUT(image, table))
+    pixel = np.array([((per / 255.0) ** (gamma)) * 255
+      for per in np.arange(0, 256)]).astype("uint8")
+    img = Image.fromarray(cv2.LUT(image, pixel))
     self.image = img
     self.show_image(img)
   
