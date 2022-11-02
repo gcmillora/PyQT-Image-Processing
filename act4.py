@@ -7,7 +7,7 @@ from PyQt5 import uic
 from PyQt5.QtGui import QPixmap, QImage
 from PIL.ImageQt import ImageQt
 from PIL import Image
-from cv2 import QT_PUSH_BUTTON
+
 import matplotlib.pyplot as pyplot
 import numpy as np
 import cv2
@@ -60,6 +60,12 @@ class UI(QMainWindow, PCX):
     self.grayscale = self.findChild(QAction,'tfGrayscale')
     self.negative = self.findChild(QAction, 'tfNegative')
     self.infoTab = self.findChild(QTabWidget,'infoTab')
+    self.avgfilter = self.findChild(QAction, 'avg_filter')
+    self.mdnfilter = self.findChild(QAction, 'mdn_filter')
+    self.hpassfilter = self.findChild(QAction, 'hpass_filter')
+    self.unsharpfilter = self.findChild(QAction, 'unsharp_filter')
+    self.hboostfilter = self.findChild(QAction, 'hboost_filter')
+    self.sobelgradient = self.findChild(QAction, 'sobel_gradient')
     
     #Gamma Dock Widgets
     self.gammaDock = self.findChild(QDockWidget,'gammaDock')
@@ -100,6 +106,7 @@ class UI(QMainWindow, PCX):
     self.saveImgGamma.clicked.connect(self.save_image)
     self.reset.triggered.connect(self.reset_image)
     self.grayscaleTool.triggered.connect(self.tf_grayscale)
+    self.avgfilter.triggered.connect(self.sf_avg)
     
     #Declare the variables
     self.fileopen=''
@@ -256,7 +263,18 @@ class UI(QMainWindow, PCX):
     img = Image.fromarray(img)
     self.image = img
     self.show_image(img)
-    
+  
+  #Spatial Filtering - Averaging Filter
+  def sf_avg(self):
+    img = cv2.imread('dump.png')
+    kernel = np.ones((3,3),np.float32)/9
+    img = cv2.filter2D(img,-1,kernel)
+    img = Image.fromarray(img)
+    self.image = img
+    self.show_image(img)
+
+
+
   #Function to show the image to the UI
   #Converts the image to a .PNG file and sets it to the label
   #with the size 400x400.

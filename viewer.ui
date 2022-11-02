@@ -293,7 +293,7 @@
      <x>0</x>
      <y>0</y>
      <width>806</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuChannel">
@@ -319,9 +319,21 @@
     <addaction name="thGamma"/>
     <addaction name="bnwButton"/>
    </widget>
+   <widget class="QMenu" name="menuSpatial_Filters">
+    <property name="title">
+     <string>Spatial Filters</string>
+    </property>
+    <addaction name="avg_filter"/>
+    <addaction name="mdn_filter"/>
+    <addaction name="hpass_filter"/>
+    <addaction name="unsharp_filter"/>
+    <addaction name="hboost_filter"/>
+    <addaction name="sobel_gradient"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuChannel"/>
    <addaction name="menuTransform"/>
+   <addaction name="menuSpatial_Filters"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -343,7 +355,7 @@
   <action name="showChannels_2">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Downloads/351428.png</normaloff>../../../../../Downloads/351428.png</iconset>
+     <normaloff>../../../Downloads/351428.png</normaloff>../../../Downloads/351428.png</iconset>
    </property>
    <property name="text">
     <string>splitChannel</string>
@@ -409,6 +421,36 @@
    </property>
    <property name="text">
     <string>GRAYSCALE</string>
+   </property>
+  </action>
+  <action name="avg_filter">
+   <property name="text">
+    <string>Averaging Filter</string>
+   </property>
+  </action>
+  <action name="mdn_filter">
+   <property name="text">
+    <string>Median Filter</string>
+   </property>
+  </action>
+  <action name="hpass_filter">
+   <property name="text">
+    <string>Highpass Filter</string>
+   </property>
+  </action>
+  <action name="unsharp_filter">
+   <property name="text">
+    <string>Unsharp Masking</string>
+   </property>
+  </action>
+  <action name="hboost_filter">
+   <property name="text">
+    <string>Highboost Filtering</string>
+   </property>
+  </action>
+  <action name="sobel_gradient">
+   <property name="text">
+    <string>Sobel Gradient</string>
    </property>
   </action>
  </widget>
