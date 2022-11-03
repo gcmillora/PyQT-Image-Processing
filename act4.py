@@ -13,8 +13,10 @@ import numpy as np
 import cv2
 import struct
 import sys
+from secondWindow import SecondWindow
 
-
+        
+    
 
 #Class for PCX Information
 class PCX():
@@ -46,8 +48,8 @@ class UI(QMainWindow, PCX):
     super(UI, self).__init__()
     uic.loadUi('viewer.ui', self)
     self.show()
-    
-
+    self.secondWindow = SecondWindow()
+    self.msg = "hello"
     
     #Declare the objects and find QObjects from UI
     self.button = self.findChild(QAction, 'actionAdd_Image')
@@ -60,13 +62,9 @@ class UI(QMainWindow, PCX):
     self.grayscale = self.findChild(QAction,'tfGrayscale')
     self.negative = self.findChild(QAction, 'tfNegative')
     self.infoTab = self.findChild(QTabWidget,'infoTab')
-    self.avgfilter = self.findChild(QAction, 'avg_filter')
-    self.mdnfilter = self.findChild(QAction, 'mdn_filter')
-    self.hpassfilter = self.findChild(QAction, 'hpass_filter')
-    self.unsharpfilter = self.findChild(QAction, 'unsharp_filter')
-    self.hboostfilter = self.findChild(QAction, 'hboost_filter')
-    self.sobelgradient = self.findChild(QAction, 'sobel_gradient')
+    self.spatialfilter = self.findChild(QAction, 'spatial_filtering')
     
+    self.test = self.findChild(QAction, 'test')
     #Gamma Dock Widgets
     self.gammaDock = self.findChild(QDockWidget,'gammaDock')
     self.gammaThresh = self.findChild(QAction,'thGamma')
@@ -106,7 +104,9 @@ class UI(QMainWindow, PCX):
     self.saveImgGamma.clicked.connect(self.save_image)
     self.reset.triggered.connect(self.reset_image)
     self.grayscaleTool.triggered.connect(self.tf_grayscale)
-    self.avgfilter.triggered.connect(self.sf_avg)
+
+    self.spatialfilter.triggered.connect(self.open_spatial)
+    
     
     #Declare the variables
     self.fileopen=''
@@ -264,17 +264,89 @@ class UI(QMainWindow, PCX):
     self.image = img
     self.show_image(img)
   
-  #Spatial Filtering - Averaging Filter
-  def sf_avg(self):
-    img = cv2.imread('dump.png')
-    kernel = np.ones((3,3),np.float32)/9
-    img = cv2.filter2D(img,-1,kernel)
+  #Open Second Window
+  def open_spatial(self):
+    img = cv2.imread('orig.png')
+    (row,col) = img.shape[:2]
+    for i in range(row):
+      for j in range(col):
+        img[i, j] = sum(img[i, j]) / 3
     img = Image.fromarray(img)
-    self.image = img
-    self.show_image(img)
+    img.save('dump.png')
+    self.secondWindow.display_info(self)
+    
+  #Spatial Filtering - Averaging Filter
+  # def sf_avg(self):
+  #   img = cv2.imread('dump.png')
+  #   kernel = np.ones((3,3),np.float32)/9
+  #   img = cv2.filter2D(img,-1,kernel)
+  #   img = Image.fromarray(img)
+  #   self.image = img
+  #   self.show_image(img)
 
-
-
+  # #Spatial Filtering - Median Filter
+  # def sf_mdn(self):
+  #   img = cv2.imread('dump.png')
+  #   (row,col) = img.shape[:2]
+  #   for i in range(row-2):
+  #     for j in range(col-2):
+  #       temp = []
+  #       for k in range(3):
+  #         for l in range(3):
+  #           temp.append(sum(img[i+k,j+l])/3)
+  #       temp.sort()
+  #       img[i+1,j+1] = temp[4]
+  #   img = Image.fromarray(img)
+  #   self.image = img
+  #   self.show_image(img)
+    
+  #   #Unsharp Masking
+  # def sf_unsharp(self):
+  #   img = cv2.imread('dump.png')
+  #   blur = img.copy()
+  #   kernel = np.ones((3,3),np.float32)/9
+  #   blur = cv2.filter2D(blur,-1,kernel)
+  #   mask = img - blur
+  #   sharp = img + mask
+  #   final_img = Image.fromarray(sharp)
+  #   self.image = final_img
+  #   self.show_image(final_img)
+  
+  # #Highpass Filter Laplacian Operator
+  # def sf_laplacian(self):
+  #   img = cv2.imread('dump.png')
+  #   kernel = np.array([[0,-1,0],[-1,4,-1],[0,-1,0]])
+  #   img = cv2.filter2D(img,-1,kernel)
+  #   img = Image.fromarray(img)
+  #   self.image = img
+  #   self.show_image(img)
+    
+  # #Highboost Filtering
+  # def sf_unsharp(self):
+  #   img = cv2.imread('dump.png')
+  #   blur = img.copy()
+  #   kernel = np.ones((3,3),np.float32)/9
+  #   blur = cv2.filter2D(blur,-1,kernel)
+  #   mask = img * (1.5-1)  + img
+  #   sharp = mask - blur
+  #   final_img = Image.fromarray(sharp)
+  #   self.image = final_img
+  #   self.show_image(final_img)
+  
+  # #Sobel Edge Detection
+  # def sf_sobel(self):
+  #   img = cv2.imread('dump.png')
+  #   xkernel = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+  #   ykernel = np.array([[1,2,1],[0,0,0],[-1,-2,-1]])
+  #   xsobel = cv2.filter2D(img,-1,xkernel)
+  #   ysobel = cv2.filter2D(img,-1,ykernel)
+  #   magnitude = np.sqrt(np.square(xsobel) + np.square(ysobel))
+  #   ximg = Image.fromarray(xsobel)
+  #   yimg = Image.fromarray(ysobel)
+  #   final_img = Image.fromarray(magnitude)
+    
+    
+      
   #Function to show the image to the UI
   #Converts the image to a .PNG file and sets it to the label
   #with the size 400x400.
@@ -305,9 +377,12 @@ class UI(QMainWindow, PCX):
     #Open the image file and show it to the UI.
     img = Image.open(self.fileopen)
     self.orig_img = img
+    self.orig_img.save('orig.png')
     self.show_image(img)
     print(self.fileopen)
     
+  def test_function(self):
+    print(self.msg)
 
 app = QApplication(sys.argv)
 UIWindow = UI()

@@ -280,12 +280,14 @@
     <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <addaction name="actionAdd_Image"/>
    <addaction name="grayscaleTool"/>
    <addaction name="tfNegative"/>
    <addaction name="reset"/>
+   <addaction name="spatial_filtering"/>
+   <addaction name="test"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -293,7 +295,7 @@
      <x>0</x>
      <y>0</y>
      <width>806</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuChannel">
@@ -451,6 +453,16 @@
   <action name="sobel_gradient">
    <property name="text">
     <string>Sobel Gradient</string>
+   </property>
+  </action>
+  <action name="spatial_filtering">
+   <property name="text">
+    <string>Spatial Filtering</string>
+   </property>
+  </action>
+  <action name="test">
+   <property name="text">
+    <string>TEST</string>
    </property>
   </action>
  </widget>
