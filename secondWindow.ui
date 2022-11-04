@@ -44,10 +44,22 @@
        <x>10</x>
        <y>10</y>
        <width>181</width>
-       <height>251</height>
+       <height>292</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QPushButton" name="reset_original">
+        <property name="styleSheet">
+         <string notr="true">background-color: lightblue;
+border-radius: 5px;
+padding: 4px;</string>
+        </property>
+        <property name="text">
+         <string>Revert to Original</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QPushButton" name="avg_filter">
         <property name="styleSheet">
@@ -57,6 +69,18 @@ padding: 4px;</string>
         </property>
         <property name="text">
          <string>Average Filtering</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="salt_pepper">
+        <property name="styleSheet">
+         <string notr="true">background-color: white;
+border-radius: 5px;
+padding: 4px;</string>
+        </property>
+        <property name="text">
+         <string>Salt and Pepper Noise</string>
         </property>
        </widget>
       </item>
@@ -216,6 +240,9 @@ padding: 4px;</string>
          <property name="text">
           <string/>
          </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -254,6 +281,9 @@ padding: 4px;</string>
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

@@ -276,18 +276,20 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionAdd_Image"/>
    <addaction name="grayscaleTool"/>
    <addaction name="tfNegative"/>
    <addaction name="reset"/>
    <addaction name="spatial_filtering"/>
-   <addaction name="test"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -325,12 +327,7 @@
     <property name="title">
      <string>Spatial Filters</string>
     </property>
-    <addaction name="avg_filter"/>
-    <addaction name="mdn_filter"/>
-    <addaction name="hpass_filter"/>
-    <addaction name="unsharp_filter"/>
-    <addaction name="hboost_filter"/>
-    <addaction name="sobel_gradient"/>
+    <addaction name="open_filters"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuChannel"/>
@@ -425,9 +422,9 @@
     <string>GRAYSCALE</string>
    </property>
   </action>
-  <action name="avg_filter">
+  <action name="open_filters">
    <property name="text">
-    <string>Averaging Filter</string>
+    <string>Open Filters</string>
    </property>
   </action>
   <action name="mdn_filter">
@@ -456,13 +453,12 @@
    </property>
   </action>
   <action name="spatial_filtering">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/filter-filled-tool-symbol.png</normaloff>icons/filter-filled-tool-symbol.png</iconset>
+   </property>
    <property name="text">
     <string>Spatial Filtering</string>
-   </property>
-  </action>
-  <action name="test">
-   <property name="text">
-    <string>TEST</string>
    </property>
   </action>
  </widget>

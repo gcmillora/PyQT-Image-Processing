@@ -63,6 +63,7 @@ class UI(QMainWindow, PCX):
     self.negative = self.findChild(QAction, 'tfNegative')
     self.infoTab = self.findChild(QTabWidget,'infoTab')
     self.spatialfilter = self.findChild(QAction, 'spatial_filtering')
+    self.openfilters = self.findChild(QAction, 'open_filters')
     
     self.test = self.findChild(QAction, 'test')
     #Gamma Dock Widgets
@@ -104,7 +105,7 @@ class UI(QMainWindow, PCX):
     self.saveImgGamma.clicked.connect(self.save_image)
     self.reset.triggered.connect(self.reset_image)
     self.grayscaleTool.triggered.connect(self.tf_grayscale)
-
+    self.open_filters.triggered.connect(self.open_spatial)
     self.spatialfilter.triggered.connect(self.open_spatial)
     
     
@@ -207,9 +208,14 @@ class UI(QMainWindow, PCX):
     for i in range(row):
       for j in range(col):
         img[i, j] = sum(img[i, j]) / 3
-    img = Image.fromarray(img)
-    img.save('dump.png')
-    self.show_image(img)
+    arr = Image.fromarray(img)
+    arr.save('dump.png')
+    
+    height,width,channel = img.shape
+    bytes_pl = 3 * width
+    img = QImage(img.data,width,height,bytes_pl,QImage.Format_RGB888)
+    pixmap = QPixmap.fromImage(img)
+    self.label.setPixmap(pixmap)
     self.bnwThresh.setEnabled(True)
   
   #Function to transform the image to negative using
@@ -223,9 +229,14 @@ class UI(QMainWindow, PCX):
     for i in range(row):
       for j in range(col):
         img[i, j] = 255 - img[i, j]
-    img = Image.fromarray(img)
-    img.save('dump.png')
-    self.show_image(img)
+    arr = Image.fromarray(img)
+    arr.save('dump.png')
+    
+    height,width,channel = img.shape
+    bytes_pl = 3 * width
+    img = QImage(img.data,width,height,bytes_pl,QImage.Format_RGB888)
+    pixmap = QPixmap.fromImage(img)
+    self.label.setPixmap(pixmap)
     self.bnwThresh.setEnabled(False)
   
   #Function to transform the image to gamma using
@@ -281,9 +292,14 @@ class UI(QMainWindow, PCX):
   #with the size 400x400.
   def show_image(self,img):
     img = img.resize((400,400))
-    temp_img = ImageQt(img)
-    self.pixmap = QPixmap.fromImage(temp_img)
-    self.label.setPixmap(self.pixmap)
+    img.save('edit.png')
+    open_cv = cv2.imread('edit.png')
+    
+    height,width,channel = open_cv.shape
+    bytes_pl = 3 * width
+    open_img = QImage(open_cv.data,width,height,bytes_pl,QImage.Format_RGB888).rgbSwapped()
+    pixmap = QPixmap.fromImage(open_img)
+    self.label.setPixmap(pixmap)
     
   def add_image(self,s):
     #If a file was open, clear the plot label and set the text to select channel.
@@ -307,7 +323,9 @@ class UI(QMainWindow, PCX):
     img = Image.open(self.fileopen)
     self.orig_img = img
     self.orig_img.save('orig.png')
-    self.show_image(img)
+    
+    png_img = Image.open('dump.png')
+    self.show_image(png_img)
     print(self.fileopen)
     
   def test_function(self):
